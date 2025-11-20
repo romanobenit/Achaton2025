@@ -57,14 +57,36 @@ export let GameData: gameData = {
     { name: "pozioneAttacco", path: "assets/images/DannoPotion.png" },
   ],
   atlas: [],
+
   sounds: [
-    /*{
-    name: "music",
-    paths: ["assets/sounds/intro.ogg", "assets/sounds/intro.m4a"],
-    volume: 1,
-    loop: true,
-    frame: 1,
-  }*/
+    {
+      name: "music",
+      paths: ["assets/sounds/Ordi-2.ogg"]
+    },
+    {
+      name: "click1",
+      paths: ["assets/sounds/prep1.ogg"]
+    },
+    {
+      name: "click2",
+      paths: ["assets/sounds/prep2.ogg"]
+    },
+    {
+      name: "dmg",
+      paths: ["assets/sounds/dmg.ogg"]
+    },
+    {
+      name: "boss",
+      paths: ["assets/sounds/feutre.ogg"]
+    },
+    {
+      name: "boss2",
+      paths: ["assets/sounds/Neunoeil.ogg"]
+    },
+    {
+      name: "boss3",
+      paths: ["assets/sounds/AquaMita.ogg"]
+    },
   ],
 
   videos: [

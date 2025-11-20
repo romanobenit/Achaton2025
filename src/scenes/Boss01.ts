@@ -32,6 +32,9 @@ export default class Boss01 extends Phaser.Scene {
   private _Mana: Phaser.GameObjects.Text;
   //BOSS BOX-----------------------------------------------------------------------------------------------------------------------
   
+  //MUSIC-----------------------------------------------------------------------------------------------------------------------
+  private _music: Phaser.Sound.BaseSound;
+  private _click: Phaser.Sound.BaseSound;
 
   //Logic----------------------------------------------------------------------------------------------------------------------
   private _animation: boolean = false;
@@ -54,13 +57,27 @@ export default class Boss01 extends Phaser.Scene {
   }
 
   preload() {
-
+    this.load.audio("boss2","assets/sounds/Neunoeil.ogg");
   }
 
 
   create() {
     //PLAYER-----------------------------------------------------------------------------------------------------------------------
     this._currentTurn = null;
+
+
+    //CHECK MUSIC
+    this._click = this.sound.add("click2");
+    this._music = this.sound.add("boss", { loop: true });
+    if(this.registry.get("musicOn") === undefined){
+      this.registry.set("musicOn", true);
+    }
+
+    if(this.registry.get("musicOn")){
+      this._music.play();
+    }
+
+
 
     this._player = new Player({
       scene: this,
@@ -71,7 +88,7 @@ export default class Boss01 extends Phaser.Scene {
       { nome: "punch", danno: 15, costo: 0 },
       { nome: "smite", danno: 30, costo: 1 },
       { nome: "large slayer", danno: 80, costo: 2 },
-      { nome: "mita destroyer", danno: 190, costo: 4 }
+      { nome: "mita destroyer", danno: 9999999, costo: 4 }
     ]);
     this._playerSprite = this.add.sprite(300, 550, "player", 0).setDepth(1)
     .setScale(10);
@@ -179,6 +196,7 @@ export default class Boss01 extends Phaser.Scene {
      }).on("pointerout", () => {
       this.buttonTwiin(this._attackTextLabel, 1);
      }).on("pointerdown", () => {
+      this._click.play();
       const move=this._player.attack(this._boss, this._bossSprite, this._bossHealthBar, this._Mana);
       
     });
@@ -192,6 +210,7 @@ export default class Boss01 extends Phaser.Scene {
      }).on("pointerout", () => {
       this.buttonTwiin(this._techTextLabel, 1);
      }).on("pointerdown", () => {
+      this._click.play();
       const move=this._player.tech();
       this.info(move.nome,move.danno);
       
@@ -206,6 +225,7 @@ export default class Boss01 extends Phaser.Scene {
      }).on("pointerout", () => {
       this.buttonTwiin(this._inventoryTextLabel, 1);
      }).on("pointerdown", () => {
+      this._click.play();
       this._player.inventory(this._Mana, this._playerHealthBar);
     });
 
@@ -219,6 +239,8 @@ export default class Boss01 extends Phaser.Scene {
       this.buttonTwiin(this._restartTextLabel, 1);
      })
      .on("pointerdown", () => {
+      this._click.play();
+      this._music.stop();
       this.scene.stop("Boss01");
       this.scene.start("Boss01");
     }).setInteractive();

@@ -27,7 +27,7 @@ create(){
 
   let _sfondoNero: Phaser.GameObjects.Image = this.add.image(0, 0, "sfondoNero").setOrigin(0, 0).setAlpha(0).setDepth(1002);
   this.add.image(this.game.canvas.width/2, this.game.canvas.height/2, "BootImage").setOrigin(0.5).setScale(10);
-  this._mita = this.add.text(this.game.canvas.width / 2, this.game.canvas.height / 2+100, "Clicca per prendere la tua arma!");
+  this._mita = this.add.text(this.game.canvas.width / 2, this.game.canvas.height / 2+100, "Embrace your faith.");
   this._mita.setOrigin(0.5).setInteractive().
   setAlpha(1).setAngle(0)
     .setShadow(5, 5, "#777777", 5, true, true)
@@ -52,9 +52,10 @@ create(){
 
     this.tweens.add({
       targets: this._mita,
-      angle: 360,
-      duration: 99999,
-      ease: "linear",
+      angle: { from: -10, to: 10 },
+      duration: 4500,
+      ease: "Sine.easeInOut",
+      yoyo: true,
       repeat: -1,
     });
 }

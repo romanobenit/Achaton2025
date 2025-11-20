@@ -3,11 +3,14 @@ import GameOver from "../scenes/GameOver";
 import iMosse from "./iMosse";
 import IPlayer from "./iPlayer";
 
+
 export default class Player extends Phaser.GameObjects.Sprite implements IPlayer {
 
     private _genericConfig: genericConfig;
     private game:boolean = true;
-
+    private _dmg: Phaser.Sound.BaseSound;
+    
+    
     nome: string;
     Vita: number;
     maxVita: number;
@@ -37,6 +40,7 @@ export default class Player extends Phaser.GameObjects.Sprite implements IPlayer
         this.p = this.scene.add.sprite(0,0,"TU");
         this.pBody = <Phaser.Physics.Arcade.Body>this.p.body;
         this.keyboard = this.scene.input.keyboard.createCursorKeys();
+        this._dmg = this.scene.sound.add("dmg");
     }
 
     update(time: number, delta: number,x: IPlayer, y: Phaser.GameObjects.Sprite, sp: string, n: number, liv:string, fase:number): void {
@@ -89,7 +93,7 @@ export default class Player extends Phaser.GameObjects.Sprite implements IPlayer
                 targets: _pallino,
                 x: 1280,
                 ease: 'linear',
-                duration: Phaser.Math.RND.between(500,850), 
+                duration: Phaser.Math.RND.between(1100,1200),
                 repeat: 0,
                 onComplete: () => {
                     _container.destroy();
@@ -338,6 +342,7 @@ activeDefence01(x: IPlayer, z: Phaser.GameObjects.Graphics): void {
 
         this.scene.physics.add.collider(this.pBody, _axeBody, () => {
             console.log("Player colpito dall'ascia!");
+            this._dmg.play();
             this.Vita -= x.mossaSelected.danno;
             controllo = false;
             z.clear();
@@ -445,6 +450,7 @@ activeDefence02(x: IPlayer, z: Phaser.GameObjects.Graphics): void {
         this.scene.physics.add.collider(this.p, [_weapon1, _weapon2], () => {
             if (!controllo) return; // Assicura che l'evento collider venga gestito una sola volta
             console.log("Player colpito dalla falce!");
+            this._dmg.play();
             this.Vita -= x.mossaSelected.danno;
             controllo = false;
             z.clear();
@@ -538,6 +544,7 @@ activeDefence03(x: IPlayer, z: Phaser.GameObjects.Graphics): void {
 
                 this.scene.physics.add.collider(this.pBody, _croceBody2, () => {
                     console.log("Player colpito dalla croce!");
+                    this._dmg.play();
                     this.Vita -= x.mossaSelected.danno;
                     controllo = false;
                     z.clear();
@@ -553,6 +560,7 @@ activeDefence03(x: IPlayer, z: Phaser.GameObjects.Graphics): void {
     
             this.scene.physics.add.collider(this.pBody, _croceBody, () => {
                 console.log("Player colpito dalla croce!");
+                this._dmg.play();
                 this.Vita -= x.mossaSelected.danno;
                 controllo = false;
                 z.clear();
@@ -623,6 +631,7 @@ sconfitta(): void {
         ease: "linear",
         repeat: 0,
         onComplete: () =>{
+          this.scene.sound.stopAll();
           this.scene.scene.start("Intro");
         },
       });
@@ -662,6 +671,7 @@ onTwiin(params: any, x: number): void {
       ease: "linear",
       repeat: 0,
       onComplete: () =>{
+        this.scene.sound.stopAll();
         this.scene.scene.start("BossLead");
         this.scene.registry.set("level", levely)
         this.scene.registry.set("fase", fase);

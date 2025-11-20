@@ -30,8 +30,9 @@ export default class Boss03 extends Phaser.Scene {
   private _textGUI: Phaser.GameObjects.Image;
   private _infoText: Phaser.GameObjects.Text;
   private _Mana: Phaser.GameObjects.Text;
-  //BOSS BOX-----------------------------------------------------------------------------------------------------------------------
-  
+  //MUSIC
+  private _music: Phaser.Sound.BaseSound;
+  private _click: Phaser.Sound.BaseSound;
 
   //Logic----------------------------------------------------------------------------------------------------------------------
   private _animation: boolean = false;
@@ -62,6 +63,20 @@ export default class Boss03 extends Phaser.Scene {
     //PLAYER-----------------------------------------------------------------------------------------------------------------------
     this._currentTurn = null;
 
+    //CHECK MUSIC
+    this._click = this.sound.add("click2");
+    this._music = this.sound.add("boss3", { loop: true });
+    if(this.registry.get("musicOn") === undefined){
+      this.registry.set("musicOn", true);
+    }
+
+    if(this.registry.get("musicOn")){
+      this._music.play();
+    }
+
+
+
+
     this._player = new Player({
       scene: this,
       x: 100,
@@ -71,7 +86,7 @@ export default class Boss03 extends Phaser.Scene {
       { nome: "Holy prayer", danno: 25, costo: 1 },
       { nome: "Gabriel's Smite", danno: 45, costo: 2 },
       { nome: "Judas's Kiss", danno: 75, costo: 3 },
-      { nome: "God's Touch", danno: 125, costo: 5 }
+      { nome: "God's Touch", danno: 390, costo: 5 }
     ]);
     this._playerSprite = this.add.sprite(300, 550, "player", 0).setDepth(1)
     .setScale(10);
@@ -179,6 +194,7 @@ export default class Boss03 extends Phaser.Scene {
      }).on("pointerout", () => {
       this.buttonTwiin(this._attackTextLabel, 1);
      }).on("pointerdown", () => {
+      this._click.play();
       const move=this._player.attack(this._boss, this._bossSprite, this._bossHealthBar, this._Mana);
       
     });
@@ -192,6 +208,7 @@ export default class Boss03 extends Phaser.Scene {
      }).on("pointerout", () => {
       this.buttonTwiin(this._techTextLabel, 1);
      }).on("pointerdown", () => {
+      this._click.play();
       const move=this._player.tech();
       this.info(move.nome,move.danno);
       
@@ -206,6 +223,7 @@ export default class Boss03 extends Phaser.Scene {
      }).on("pointerout", () => {
       this.buttonTwiin(this._inventoryTextLabel, 1);
      }).on("pointerdown", () => {
+      this._click.play();
       this._player.inventory(this._Mana, this._playerHealthBar);
     });
 
@@ -219,6 +237,8 @@ export default class Boss03 extends Phaser.Scene {
       this.buttonTwiin(this._restartTextLabel, 1);
      })
      .on("pointerdown", () => {
+      this._click.play();
+      this._music.stop();
       this.scene.stop("Boss03");
       this.scene.start("Boss03");
     }).setInteractive();
